@@ -1,40 +1,39 @@
-
 {
-    "name": "anonymous",
-    "description": "anonymous",
-    "repository": "https://github.com/",
-    "keywords": [
-        "telegram bot",
-        "pyrogram"
-    ],
-    "env": {
-        "API_ID":{
-            "description": "Get your telegram API ID from https://my.telegram.org",
-            "value":"20114039"
-        },
-        "API_HASH":{
-            "description":"Get your telegram API HASH from https://my.telegram.org",
-		    "value":"87297b8f3cc8fc9bbce591ad30da5896"
-        },
-        "BOT_TOKEN":{
-            "description":"Get from BotFather",
-            "value":"7559250442:AAF_HDC3Fb_yG6xHxXkRhhwlMm3LiwT9MkE"
-        },
-        "AUTH_USERS":{
-            "description":"Admin/Owner/Friends ID Seperate by ','  Ex: 44578878,8878899",
-             "value":"8172163893"
-       
-	}
+  "name": "anonymous",
+  "description": "anonymous telegram bot",
+  "repository": "https://github.com/yourusername/your-repo-name",
+  "keywords": [
+    "telegram bot",
+    "pyrogram"
+  ],
+  "env": {
+    "API_ID": {
+      "description": "Get your Telegram API ID from https://my.telegram.org",
+      "required": true
     },
-    "addons": [],
-    "buildpacks": [
-        {
-	  "url": "heroku/python"
-          "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
-	 "url": "https://github.com/heroku/heroku-buildpack-activestorage-preview"
-	}
-
-	    
+    "API_HASH": {
+      "description": "Get your Telegram API HASH from https://my.telegram.org",
+      "required": true
+    },
+    "BOT_TOKEN": {
+      "description": "Bot token from @BotFather",
+      "required": true
+    },
+    "AUTH_USERS": {
+      "description": "Admin/Owner Telegram user IDs, comma-separated (e.g., 12345678,87654321)",
+      "required": true
     }
-
+  },
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    },
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-activestorage-preview"
+    }
+  ],
+  "addons": []
 }
