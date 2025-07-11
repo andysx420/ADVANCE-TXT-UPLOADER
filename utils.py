@@ -1,7 +1,10 @@
-# Don't Remove Credit Telegram - @Tushar0125
+# Don't Remove Credit Tg - @AndySX25
+
 import time
 import math
 import os
+import asyncio
+from datetime import datetime,timedelta
 from pyrogram.errors import FloodWait
 
 class Timer:
@@ -15,12 +18,8 @@ class Timer:
             return True
         return False
 
-
-from datetime import datetime,timedelta
-
 def hrb(value, digits= 2, delim= "", postfix=""):
-    """Return a human-readable file size.
-    """
+    """Return a human-readable file size."""
     if value is None:
         return None
     chosen_unit = "B"
@@ -33,12 +32,10 @@ def hrb(value, digits= 2, delim= "", postfix=""):
     return f"{value:.{digits}f}" + delim + chosen_unit + postfix
 
 def hrt(seconds, precision = 0):
-    """Return a human-readable time delta as a string.
-    """
+    """Return a human-readable time delta as a string."""
     pieces = []
     value = timedelta(seconds=seconds)
     
-
     if value.days:
         pieces.append(f"{value.days}d")
 
@@ -61,8 +58,6 @@ def hrt(seconds, precision = 0):
         return "".join(pieces)
 
     return "".join(pieces[:precision])
-
-
 
 timer = Timer()
 
@@ -91,6 +86,17 @@ async def progress_bar(current, total, reply, start):
             progress_bar = "🟢" * completed_length + "🔴" * remaining_length
                 
             try:
-                await reply.edit(f'</b>╭──⌯════🌟𝗨𝗣𝗟𝗢𝗔𝗗𝗜𝗡𝗚🌟═════⌯──╮ \n├⚡ {progress_bar}\n ├🚀 𝗦𝗽𝗲𝗲𝗱 ➠ {sp} \n ├📛 𝗣𝗿𝗼𝗴𝗿𝗲𝘀𝘀 ➠ {perc} \n ├📟 𝗟𝗼𝗮𝗱𝗲𝗱 ➠ {cur} \n ├🧲 𝗦𝗶𝘇𝗲 ➠ {tot} \n ├🕑 𝗘𝘁𝗮 ➠ {eta} \n╰─══👨🏻‍💻𝗧𝗨𝗦𝗛𝗔𝗥👨🏻‍💻══─╯\n\n🙂 चलो फिर से अजनबी बन जायें 🙂</b>') 
+                await reply.edit(
+                    f'</b>╭──⌯════🌟 UPLOADING 🌟═════⌯──╮\n'
+                    f'├⚡ {progress_bar}\n'
+                    f'├🚀 Speed ➠ {sp}\n'
+                    f'├📛 Progress ➠ {perc}\n'
+                    f'├📟 Loaded ➠ {cur}\n'
+                    f'├🧲 Size ➠ {tot}\n'
+                    f'├🕑 ETA ➠ {eta}\n'
+                    f'╰─══👨🏻‍💻 AndySX 👨🏻‍💻══─╯</b>'
+                )
             except FloodWait as e:
-                time.sleep(e.x)
+                await asyncio.sleep(e.value)
+            except Exception as e:
+                print(f"Progress bar update failed: {e}")
