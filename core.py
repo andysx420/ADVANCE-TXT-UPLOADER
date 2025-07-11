@@ -1,6 +1,7 @@
-# Don't Remove Credit Tg - @Tushar0125
+# Don't Remove Credit Tg - @AndySX25
 
 import os
+import re
 import time
 import datetime
 import aiohttp
@@ -20,6 +21,8 @@ from pyrogram.types import Message
 from pytube import Playlist  #Youtube Playlist Extractor
 from yt_dlp import YoutubeDL
 import yt_dlp as youtube_dl
+
+global failed_counter = 0;
 
 def duration(filename):
     result = subprocess.run(["ffprobe", "-v", "error", "-show_entries",
@@ -219,14 +222,7 @@ def save_to_file(video_links, channel_name):
                 formatted_url = f"https://www.youtube.com/watch?v={url}"
             file.write(f"{number}. {title}: {formatted_url}\n")
     return filename
-
-async def download_video(url, cmd, name):
-    download_cmd = f'{cmd} -R 25 --fragment-retries 25 --external-downloader aria2c --downloader-args "aria2c: -x 16 -j 32"'
-    global failed_counter
-    print(download_cmd)
-    logging.info(download_cmd)
-    k = subprocess.run(download_cmd, shell=True)
-    
+  
     # Check if the URL is of type 'visionias' or 'penpencilvod'
     if "visionias" in cmd:
         return await download_visionias(url, cmd, name)
@@ -261,7 +257,7 @@ async def download_penpencilvod(url, cmd, name):
         failed_counter = 0
         return await default_download(url, cmd, name)
 
-async def download_video(url,cmd, name):
+async def download_video(url, cmd, name):
     download_cmd = f'{cmd} -R 25 --fragment-retries 25 --external-downloader aria2c --downloader-args "aria2c: -x 16 -j 32"'
     global failed_counter
     print(download_cmd)
@@ -290,8 +286,8 @@ async def download_video(url,cmd, name):
         return os.path.isfile.splitext[0] + "." + "mp4"
 
 
-async def send_doc(bot: Client, m: Message,cc,ka,cc1,prog,count,name):
-    reply = await m.reply_text(f"🚀🚀🚀𝗨𝗣𝗟𝗢𝗔𝗗𝗜𝗡𝗚🚀🚀🚀 » `{name}`\n\n🤖𝗕𝗢𝗧 𝗠𝗔𝗗𝗘 𝗕𝗬 ➤ 𝗧𝗨𝗦𝗛𝗔𝗥")
+async def send_doc(bot: Client, m: Message, cc, ka, cc1, prog, count, name):
+    reply = await m.reply_text(f"🚀 **Uploading Media** » `{name}`\n\n🤖 BOT MADE BY ➤ **ANDYSX**")
     time.sleep(1)
     start_time = time.time()
     await m.reply_document(ka,caption=cc1)
@@ -302,31 +298,26 @@ async def send_doc(bot: Client, m: Message,cc,ka,cc1,prog,count,name):
     time.sleep(3) 
 
 
-async def send_vid(bot: Client, m: Message,cc,filename,thumb,name,prog):
-    
-    subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:12 -vframes 1 "{filename}.jpg"', shell=True)
-    await prog.delete (True)
-    reply = await m.reply_text(f"**🚀🚀🚀𝗨𝗣𝗟𝗢𝗔𝗗𝗜𝗡𝗚🚀🚀🚀** » `{name}`\n\n🤖𝗕𝗢𝗧 𝗠𝗔𝗗𝗘 𝗕𝗬 ➤ 𝗧𝗨𝗦𝗛𝗔𝗥")
+async def send_vid(bot: Client, m: Message, cc, filename, thumb, name, prog):
     try:
-        if thumb == "no":
-            thumbnail = f"{filename}.jpg"
-        else:
-            thumbnail = thumb
+        # Generate thumbnail
+        subprocess.run(f'ffmpeg -i "{filename}" -ss 00:00:12 -vframes 1 "{filename}.jpg"', shell=True)
+        thumbnail = f"{filename}.jpg"
+
+        await prog.delete(True)
+        reply = await m.reply_text(f"🚀 **Uploading Video** » `{name}`\n\n🤖 Made by: 𝗧𝗨𝗦𝗛𝗔𝗥")
+
+        await bot.send_video(
+            chat_id=m.chat.id,
+            video=filename,
+            thumb=thumbnail if os.path.exists(thumbnail) else None,
+            caption=cc,
+            supports_streaming=True
+        )
+        await reply.delete(True)
+
+        os.remove(filename)
+        if os.path.exists(thumbnail):
+            os.remove(thumbnail)
     except Exception as e:
-        await m.reply_text(str(e))
-
-    dur = int(duration(filename))
-
-    start_time = time.time()
-
-    try:
-        await m.reply_video(filename,caption=cc, supports_streaming=True,height=720,width=1280,thumb=thumbnail,duration=dur, progress=progress_bar,progress_args=(reply,start_time))
-    except Exception:
-        await m.reply_document(filename,caption=cc, progress=progress_bar,progress_args=(reply,start_time))
-
-    
-    os.remove(filename)
-
-    os.remove(f"{filename}.jpg")
-    await reply.delete (True)
-    
+        await m.reply_text(f"❌ Upload failed: {e}")
