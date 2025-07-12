@@ -15,7 +15,7 @@
 | Command            | Description                                  |
 |--------------------|----------------------------------------------|
 | `/start`           | ⚡ Check if the bot is alive.                 |
-| `/tushar`          | 📁 Upload a `.txt` file.                     |
+| `/drm`          | 📁 Upload a `.txt` file.                     |
 | `/stop`            | 🛑 Stop the ongoing process.                  |
 | `/restart`         | 🔮 Restart the bot.                          |
 | `/cookies`         | 🍪 Upload a cookies file.                    |
