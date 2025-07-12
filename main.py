@@ -25,45 +25,50 @@ from bs4 import BeautifulSoup
 from yt_dlp import YoutubeDL
 import yt_dlp as youtube_dl
 import cloudscraper
-import m3u8
+from dotenv import load_dotenv
 import core as helper
 from utils import progress_bar
-from vars import API_ID, API_HASH, BOT_TOKEN
 from aiohttp import ClientSession
 from pyromod import listen
 from subprocess import getstatusoutput
 from pytube import YouTube
-
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from pyrogram.errors import FloodWait
 from pyrogram.errors.exceptions.bad_request_400 import StickerEmojiInvalid
 from pyrogram.types.messages_and_media import message
 from pyrogram.types import InlineKeyboardButton, InlineKeyboardMarkup
-cookies_file_path = os.getenv("COOKIES_FILE_PATH", "youtube_cookies.txt")
 
+# Load .env file
+load_dotenv()
+
+# 🧾 Load environment variables
+API_ID = int(os.getenv("API_ID"))
+API_HASH = os.getenv("API_HASH")
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+AUTH_CHANNEL = int(os.getenv("AUTH_CHANNEL", "0"))  # default 0 if not set # 🔒 Authorized Channel ID (for restricted access bots)
+OWNER_ID = int(os.getenv("OWNER_ID")) # 👑 Bot Owner's Telegram User ID
+cookies_file_path = os.getenv("COOKIES_FILE_PATH", "youtube_cookies.txt") # ✅ Load cookie file path (default: youtube_cookies.txt)
+
+# 🔗 Thumbnail / Poster images
 #pwimg = "https://graph.org/file/8add8d382169e326f67e0-3bf38f92e52955e977.jpg"
 #ytimg = "https://graph.org/file/3aa806c302ceec62e6264-60ced740281395f68f.jpg"
 cpimg = "https://graph.org/file/5ed50675df0faf833efef-e102210eb72c1d5a17.jpg"  
 
-
+# 🎉 Function to show a random emoji response
 async def show_random_emojis(message):
     emojis = ['🎊', '🔮', '😎', '⚡️', '🚀', '✨', '💥', '🎉', '🥂', '🍾', '🦠', '🤖', '❤️‍🔥', '🕊️', '💃', '🥳','🐅','🦁']
     emoji_message = await message.reply_text(' '.join(random.choices(emojis, k=1)))
     return emoji_message
     
-# Define the owner's user ID
-OWNER_ID = 1615865254 # Replace with the actual owner's user ID
+# 👥 List of Sudo Users (Admins with extended access)
+SUDO_USERS = [5840594311, 7856557198, 6303334633]
 
-# List of sudo users (initially empty or pre-populated)
-SUDO_USERS = [5840594311,7856557198,6303334633]
-
-AUTH_CHANNEL = -1002572301679
-
-# Function to check if a user is authorized
+# ✅ Authorization Checker
 def is_authorized(user_id: int) -> bool:
     return user_id == OWNER_ID or user_id in SUDO_USERS or user_id == AUTH_CHANNEL
 
+# 🤖 Initialize bot
 bot = Client(
     "bot",
     api_id=API_ID,
